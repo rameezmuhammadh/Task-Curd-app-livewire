@@ -9,35 +9,39 @@ jobs:
   web-deploy:
     name: 🎉 Deploy
     runs-on: ubuntu-latest
-
     steps:
-      - name: 🚚 Get latest code
-        uses: actions/checkout@v3
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v3
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: "8.1"
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: "8.1"
 
-      - name: Update Composer dependencies
-        run: composer update --no-interaction --prefer-dist
+    - name: Update Composer dependencies
+      run: composer update --no-interaction --prefer-dist
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: "20"
 
-      - name: Install npm packages
-        run: npm install
+    - name: Install npm packages
+      run: npm install
 
-      - name: Build assets
-        run: npm run build
+    - name: Build assets
+      run: npm run build
 
-      - name: 📂 Sync files
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.SERVER }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          server-dir: /
-          
+    - name: Debug FTP connection
+      run: |
+        echo "Attempting to connect to FTP server..."
+        nc -zv ftp.webefiy.tech 21
+
+    - name: 📂 Sync files
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: ftp.webefiy.tech
+        username: rameez@test.webefiy.tech
+        password: ${{ secrets.PASSWORD }}
+        server-dir: /
+        protocol: ftps
