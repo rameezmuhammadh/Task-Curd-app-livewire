@@ -32,16 +32,26 @@ jobs:
     - name: Build assets
       run: npm run build
 
-    - name: Debug FTP connection
+    - name: Debug DNS and FTP connection
       run: |
+        echo "Checking DNS resolution..."
+        nslookup ftp.webefiy.tech
+        echo "Checking with different DNS server (Google's 8.8.8.8)..."
+        nslookup ftp.webefiy.tech 8.8.8.8
         echo "Attempting to connect to FTP server..."
         nc -zv ftp.webefiy.tech 21
+        echo "Trying to connect using IP address (if resolved)..."
+        IP=$(dig +short ftp.webefiy.tech | head -n 1)
+        if [ ! -z "$IP" ]; then
+          nc -zv $IP 21
+        else
+          echo "Could not resolve IP address"
+        fi
 
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
-        server: ftp.webefiy.tech
-        username: rameez@test.webefiy.tech
+        server: ${{ secrets.SERVER }}
+        username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
-        server-dir: /
         protocol: ftps
