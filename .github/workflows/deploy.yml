@@ -9,49 +9,34 @@ jobs:
   web-deploy:
     name: 🎉 Deploy
     runs-on: ubuntu-latest
+
     steps:
-    - name: 🚚 Get latest code
-      uses: actions/checkout@v3
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v3
 
-    - name: Set up PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: "8.1"
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.1"
 
-    - name: Update Composer dependencies
-      run: composer update --no-interaction --prefer-dist
+      - name: Update Composer dependencies
+        run: composer update --no-interaction --prefer-dist
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: "20"
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
 
-    - name: Install npm packages
-      run: npm install
+      - name: Install npm packages
+        run: npm install
 
-    - name: Build assets
-      run: npm run build
+      - name: Build assets
+        run: npm run build
 
-    - name: Debug DNS and FTP connection
-      run: |
-        echo "Checking DNS resolution..."
-        nslookup ftp.webefiy.tech
-        echo "Checking with different DNS server (Google's 8.8.8.8)..."
-        nslookup ftp.webefiy.tech 8.8.8.8
-        echo "Attempting to connect to FTP server..."
-        nc -zv ftp.webefiy.tech 21
-        echo "Trying to connect using IP address (if resolved)..."
-        IP=$(dig +short ftp.webefiy.tech | head -n 1)
-        if [ ! -z "$IP" ]; then
-          nc -zv $IP 21
-        else
-          echo "Could not resolve IP address"
-        fi
-
-    - name: 📂 Sync files
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-      with:
-        server: ${{ secrets.SERVER }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        protocol: ftps
+      - name: 📂 Sync files
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.SERVER }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          server-dir: /
