@@ -37,6 +37,6 @@ jobs:
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ftp.webefiy.tech
-          username: rameez@test.webefiy.tech
+          username: webevkrt
           password: ${{ secrets.PASSWORD }}
-          server-dir: ./
+          server-dir: /hub.webefiy.tech/
