@@ -36,7 +36,7 @@ jobs:
       - name: 📂 Sync files
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ftp.webefiy.tech
+          server: 199.188.200.135
           username: webevkrt
           password: ${{ secrets.PASSWORD }}
           server-dir: /hub.webefiy.tech/
